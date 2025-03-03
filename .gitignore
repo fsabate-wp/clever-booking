@@ -1,0 +1,32 @@
+# Node modules
+/node_modules/
+
+# Composer vendor
+/vendor/
+
+# Archivos generados
+.DS_Store
+Thumbs.db
+*.log
+*.zip
+*.tar.gz
+
+# Archivos de configuración local
+.env
+.env.*
+!.env.example
+
+# Archivos de IDE y editores
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# Archivos temporales
+*.tmp
+*.bak
+*~
+
+# Archivos de caché
+*.cache 
