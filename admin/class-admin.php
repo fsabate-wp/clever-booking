@@ -86,7 +86,7 @@ class Clever_Booking_Admin {
      * @since    1.0.0
      */
     public function enqueue_styles() {
-        wp_enqueue_style($this->plugin_name, CLEVER_BOOKING_PLUGIN_URL . 'assets/css/admin.css', array(), $this->version, 'all');
+        wp_enqueue_style($this->plugin_name, CLEVER_BOOKING_PLUGIN_URL . 'admin/css/clever-booking-admin.css', array(), $this->version, 'all');
         
         // Solo cargar en las páginas del plugin
         $screen = get_current_screen();
@@ -96,7 +96,7 @@ class Clever_Booking_Admin {
             
             // FullCalendar para la vista de calendario
             if (strpos($screen->id, 'clever-booking-calendar') !== false) {
-                wp_enqueue_style('fullcalendar', CLEVER_BOOKING_PLUGIN_URL . 'assets/css/fullcalendar.min.css', array(), '5.10.0');
+                wp_enqueue_style('fullcalendar', 'https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css', array(), '5.11.3');
             }
         }
     }
@@ -107,7 +107,7 @@ class Clever_Booking_Admin {
      * @since    1.0.0
      */
     public function enqueue_scripts() {
-        wp_enqueue_script($this->plugin_name, CLEVER_BOOKING_PLUGIN_URL . 'assets/js/admin.js', array('jquery'), $this->version, false);
+        wp_enqueue_script($this->plugin_name, CLEVER_BOOKING_PLUGIN_URL . 'admin/js/clever-booking-admin.js', array('jquery'), $this->version, false);
         
         // Solo cargar en las páginas del plugin
         $screen = get_current_screen();
@@ -123,8 +123,7 @@ class Clever_Booking_Admin {
             
             // FullCalendar para la vista de calendario
             if (strpos($screen->id, 'clever-booking-calendar') !== false) {
-                wp_enqueue_script('fullcalendar', CLEVER_BOOKING_PLUGIN_URL . 'assets/js/fullcalendar.min.js', array('jquery'), '5.10.0', true);
-                wp_enqueue_script('clever-booking-calendar', CLEVER_BOOKING_PLUGIN_URL . 'assets/js/admin-calendar.js', array('fullcalendar'), $this->version, true);
+                wp_enqueue_script('fullcalendar-core', 'https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js', array('jquery'), '5.11.3', true);
                 
                 // Añadir datos para el calendario
                 $booking_logic = new Clever_Booking_Logic();
@@ -142,10 +141,11 @@ class Clever_Booking_Admin {
                         'end' => $reservation->booking_date . 'T' . $reservation->booking_end_time,
                         'url' => admin_url('admin.php?page=clever-booking-reservations&action=edit&id=' . $reservation->id),
                         'className' => 'status-' . $reservation->status,
+                        'service_id' => $reservation->service_id
                     );
                 }
                 
-                wp_localize_script('clever-booking-calendar', 'clever_booking_calendar', array(
+                wp_localize_script($this->plugin_name, 'clever_booking_calendar', array(
                     'events' => $calendar_events,
                 ));
             }

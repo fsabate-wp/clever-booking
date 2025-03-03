@@ -12,7 +12,7 @@ if (!defined('WPINC')) {
 }
 ?>
 
-<div class="wrap">
+<div class="wrap clever-booking-admin">
     <h1><?php echo esc_html__('Calendario de Reservas', 'clever-booking'); ?></h1>
     
     <div class="notice notice-info">
@@ -23,10 +23,10 @@ if (!defined('WPINC')) {
         <div class="calendar-filters">
             <select id="calendar-filter-status" class="calendar-filter">
                 <option value=""><?php echo esc_html__('Todos los estados', 'clever-booking'); ?></option>
-                <option value="pending"><?php echo esc_html__('Pendientes', 'clever-booking'); ?></option>
-                <option value="confirmed"><?php echo esc_html__('Confirmadas', 'clever-booking'); ?></option>
-                <option value="completed"><?php echo esc_html__('Completadas', 'clever-booking'); ?></option>
-                <option value="cancelled"><?php echo esc_html__('Canceladas', 'clever-booking'); ?></option>
+                <option value="status-pending"><?php echo esc_html__('Pendientes', 'clever-booking'); ?></option>
+                <option value="status-confirmed"><?php echo esc_html__('Confirmadas', 'clever-booking'); ?></option>
+                <option value="status-completed"><?php echo esc_html__('Completadas', 'clever-booking'); ?></option>
+                <option value="status-cancelled"><?php echo esc_html__('Canceladas', 'clever-booking'); ?></option>
             </select>
             
             <?php 
@@ -76,165 +76,4 @@ if (!defined('WPINC')) {
         
         <div id="clever-booking-calendar"></div>
     </div>
-</div>
-
-<script type="text/javascript">
-    jQuery(document).ready(function($) {
-        var calendarEl = document.getElementById('clever-booking-calendar');
-        var allEvents = clever_booking_calendar.events;
-        var calendar;
-        
-        // Inicializar el calendario
-        function initCalendar() {
-            calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                editable: false,
-                selectable: false,
-                dayMaxEvents: true,
-                events: allEvents,
-                locale: '<?php echo get_locale(); ?>',
-                eventClick: function(info) {
-                    if (info.event.url) {
-                        window.location.href = info.event.url;
-                        return false;
-                    }
-                },
-                eventTimeFormat: {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    meridiem: 'short'
-                },
-                eventClassNames: function(arg) {
-                    // Añadir clases según el estado
-                    return [ 'fc-event-' + arg.event.classNames[0] ];
-                }
-            });
-            
-            calendar.render();
-        }
-        
-        // Inicializar el calendario
-        initCalendar();
-        
-        // Filtrar eventos
-        $('#calendar-filter-apply').on('click', function() {
-            var statusFilter = $('#calendar-filter-status').val();
-            var serviceFilter = $('#calendar-filter-service').val();
-            
-            var filteredEvents = allEvents.filter(function(event) {
-                var matchStatus = true;
-                var matchService = true;
-                
-                if (statusFilter !== '') {
-                    matchStatus = event.className === 'status-' + statusFilter;
-                }
-                
-                if (serviceFilter !== '') {
-                    // Extraer el ID del servicio del evento
-                    // Asumimos que el evento tiene una propiedad extendedProps con el service_id
-                    matchService = String(event.service_id) === serviceFilter;
-                }
-                
-                return matchStatus && matchService;
-            });
-            
-            calendar.removeAllEvents();
-            calendar.addEventSource(filteredEvents);
-        });
-        
-        // Restablecer filtros
-        $('#calendar-filter-reset').on('click', function() {
-            $('#calendar-filter-status').val('');
-            $('#calendar-filter-service').val('');
-            
-            calendar.removeAllEvents();
-            calendar.addEventSource(allEvents);
-        });
-    });
-</script>
-
-<style>
-    .calendar-container {
-        margin-top: 20px;
-    }
-    
-    .calendar-filters {
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .calendar-filter {
-        min-width: 150px;
-    }
-    
-    .calendar-legend {
-        margin-bottom: 20px;
-        display: flex;
-        gap: 20px;
-    }
-    
-    .legend-item {
-        display: flex;
-        align-items: center;
-        font-size: 12px;
-    }
-    
-    .legend-color {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        margin-right: 5px;
-        border-radius: 2px;
-    }
-    
-    .status-pending {
-        background-color: #f39c12;
-    }
-    
-    .status-confirmed {
-        background-color: #3498db;
-    }
-    
-    .status-completed {
-        background-color: #2ecc71;
-    }
-    
-    .status-cancelled {
-        background-color: #e74c3c;
-    }
-    
-    #clever-booking-calendar {
-        background-color: #fff;
-        padding: 20px;
-        border: 1px solid #e5e5e5;
-        box-shadow: 0 1px 1px rgba(0,0,0,.04);
-    }
-    
-    /* Estilos específicos para FullCalendar */
-    .fc-event-status-pending {
-        background-color: #f39c12;
-        border-color: #f39c12;
-    }
-    
-    .fc-event-status-confirmed {
-        background-color: #3498db;
-        border-color: #3498db;
-    }
-    
-    .fc-event-status-completed {
-        background-color: #2ecc71;
-        border-color: #2ecc71;
-    }
-    
-    .fc-event-status-cancelled {
-        background-color: #e74c3c;
-        border-color: #e74c3c;
-    }
-</style> 
+</div> 
