@@ -762,6 +762,32 @@ class Clever_Booking_Services_List_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'details_button_border',
+                'label' => __('Borde', 'clever-booking'),
+                'selector' => '{{WRAPPER}} .cb-view-service',
+                'fields_options' => [
+                    'border' => [
+                        'default' => 'solid',
+                    ],
+                    'width' => [
+                        'default' => [
+                            'top' => 1,
+                            'right' => 1,
+                            'bottom' => 1,
+                            'left' => 1,
+                            'isLinked' => true,
+                        ],
+                    ],
+                    'color' => [
+                        'default' => '#e0e0e0',
+                    ],
+                ],
+            ]
+        );
+
         $this->end_controls_tab();
 
         $this->start_controls_tab(
@@ -792,6 +818,32 @@ class Clever_Booking_Services_List_Widget extends \Elementor\Widget_Base {
                     '{{WRAPPER}} .cb-view-service:hover' => 'color: {{VALUE}};',
                 ],
                 'default' => '#000000',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'details_button_border_hover',
+                'label' => __('Borde', 'clever-booking'),
+                'selector' => '{{WRAPPER}} .cb-view-service:hover',
+                'fields_options' => [
+                    'border' => [
+                        'default' => 'solid',
+                    ],
+                    'width' => [
+                        'default' => [
+                            'top' => 1,
+                            'right' => 1,
+                            'bottom' => 1,
+                            'left' => 1,
+                            'isLinked' => true,
+                        ],
+                    ],
+                    'color' => [
+                        'default' => '#d0d0d0',
+                    ],
+                ],
             ]
         );
 
@@ -888,6 +940,32 @@ class Clever_Booking_Services_List_Widget extends \Elementor\Widget_Base {
                 'default' => '#ffffff',
             ]
         );
+        
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'booking_button_border',
+                'label' => __('Borde', 'clever-booking'),
+                'selector' => '{{WRAPPER}} .cb-book-service',
+                'fields_options' => [
+                    'border' => [
+                        'default' => 'solid',
+                    ],
+                    'width' => [
+                        'default' => [
+                            'top' => 1,
+                            'right' => 1,
+                            'bottom' => 1,
+                            'left' => 1,
+                            'isLinked' => true,
+                        ],
+                    ],
+                    'color' => [
+                        'default' => '#4a6bff',
+                    ],
+                ],
+            ]
+        );
 
         $this->end_controls_tab();
 
@@ -919,6 +997,32 @@ class Clever_Booking_Services_List_Widget extends \Elementor\Widget_Base {
                     '{{WRAPPER}} .cb-book-service:hover' => 'color: {{VALUE}};',
                 ],
                 'default' => '#ffffff',
+            ]
+        );
+        
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'booking_button_border_hover',
+                'label' => __('Borde', 'clever-booking'),
+                'selector' => '{{WRAPPER}} .cb-book-service:hover',
+                'fields_options' => [
+                    'border' => [
+                        'default' => 'solid',
+                    ],
+                    'width' => [
+                        'default' => [
+                            'top' => 1,
+                            'right' => 1,
+                            'bottom' => 1,
+                            'left' => 1,
+                            'isLinked' => true,
+                        ],
+                    ],
+                    'color' => [
+                        'default' => '#3755e6',
+                    ],
+                ],
             ]
         );
 
