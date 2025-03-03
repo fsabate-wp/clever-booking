@@ -993,4 +993,74 @@ body.cb-modal-open {
     background-color: #fff3e0;
     color: #ef6c00;
     border: 1px solid #ffe0b2;
+}
+
+/* Estilos para la vista de lista */
+.clever-booking-services.cb-layout-list .cb-service-item {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.clever-booking-services.cb-layout-list .cb-service-inner {
+    display: flex;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.clever-booking-services.cb-layout-list .cb-service-thumbnail {
+    flex: 0 0 250px;
+}
+
+.clever-booking-services.cb-layout-list .cb-service-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.clever-booking-services.cb-layout-list .cb-service-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.clever-booking-services.cb-layout-list .cb-service-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.clever-booking-services.cb-layout-list .cb-service-category {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.clever-booking-services.cb-layout-list .cb-service-meta {
+    margin-bottom: 15px;
+}
+
+.clever-booking-services.cb-layout-list .cb-service-excerpt {
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.clever-booking-services.cb-layout-list .cb-service-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Media queries para diseño responsivo en vista de lista */
+@media (max-width: 768px) {
+    .clever-booking-services.cb-layout-list .cb-service-inner {
+        flex-direction: column;
+    }
+    
+    .clever-booking-services.cb-layout-list .cb-service-thumbnail {
+        flex: auto;
+        width: 100%;
+    }
+    
+    .clever-booking-services.cb-layout-list .cb-service-thumbnail img {
+        height: 200px;
+    }
 } 

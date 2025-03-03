@@ -19,6 +19,22 @@ $category_id = isset($atts['category_id']) ? absint($atts['category_id']) : 0;
 $layout = isset($atts['layout']) && in_array($atts['layout'], array('grid', 'list')) ? $atts['layout'] : 'grid';
 $columns = isset($atts['columns']) ? absint($atts['columns']) : 3;
 
+// Opciones de visualización
+$show_image = isset($atts['show_image']) ? ($atts['show_image'] === 'yes') : true;
+$show_title = isset($atts['show_title']) ? ($atts['show_title'] === 'yes') : true;
+$show_meta = isset($atts['show_meta']) ? ($atts['show_meta'] === 'yes') : true;
+$show_price = isset($atts['show_price']) ? ($atts['show_price'] === 'yes') : true;
+$show_details_button = isset($atts['show_details_button']) ? ($atts['show_details_button'] === 'yes') : true;
+$show_booking_button = isset($atts['show_booking_button']) ? ($atts['show_booking_button'] === 'yes') : true;
+$show_pagination = isset($atts['show_pagination']) ? ($atts['show_pagination'] === 'yes') : true;
+
+// Textos personalizados
+$details_button_text = isset($atts['details_button_text']) ? $atts['details_button_text'] : __('Ver Detalles', 'clever-booking');
+$booking_button_text = isset($atts['booking_button_text']) ? $atts['booking_button_text'] : __('Reservar Ahora', 'clever-booking');
+
+// Número de servicios por página
+$items_per_page = isset($atts['items_per_page']) ? intval($atts['items_per_page']) : 9;
+
 // Sanitizar columnas (entre 1 y 4)
 $columns = max(1, min(4, $columns));
 
@@ -37,6 +53,13 @@ if ($category_id > 0) {
             'terms'    => $category_id,
         ),
     );
+}
+
+// Configuración de paginación
+$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+if ($show_pagination) {
+    $args['posts_per_page'] = $items_per_page;
+    $args['paged'] = $paged;
 }
 
 $services = $booking_logic->get_available_services($args);
@@ -100,27 +123,33 @@ if ($layout === 'grid') {
     
     <div class="cb-service-item">
         <div class="cb-service-inner">
+            <?php if ($show_image) : ?>
             <div class="cb-service-thumbnail">
                 <a href="<?php echo esc_url($permalink); ?>">
                     <img src="<?php echo esc_url($thumbnail); ?>" alt="<?php echo esc_attr($title); ?>">
                 </a>
             </div>
+            <?php endif; ?>
             
             <div class="cb-service-content">
+                <?php if ($show_title) : ?>
                 <h3 class="cb-service-title">
                     <a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a>
                 </h3>
+                <?php endif; ?>
                 
-                <?php if (!empty($category_text)) : ?>
+                <?php if ($show_meta && !empty($category_text)) : ?>
                 <div class="cb-service-category">
                     <span><?php echo esc_html($category_text); ?></span>
                 </div>
                 <?php endif; ?>
                 
+                <?php if ($show_price) : ?>
                 <div class="cb-service-meta">
                     <span class="cb-service-price"><?php echo esc_html($price_display); ?></span>
                     <span class="cb-service-duration"><?php echo esc_html($duration_display); ?></span>
                 </div>
+                <?php endif; ?>
                 
                 <?php if ($layout === 'list' || $columns >= 3) : ?>
                 <div class="cb-service-excerpt">
@@ -129,18 +158,23 @@ if ($layout === 'grid') {
                 <?php endif; ?>
                 
                 <div class="cb-service-actions">
+                    <?php if ($show_details_button) : ?>
                     <a href="<?php echo esc_url($permalink); ?>" class="cb-button cb-button-small cb-view-service">
-                        <?php echo esc_html__('Ver Detalles', 'clever-booking'); ?>
+                        <?php echo esc_html($details_button_text); ?>
                     </a>
+                    <?php endif; ?>
                     
+                    <?php if ($show_booking_button) : ?>
                     <button type="button" class="cb-button cb-button-small cb-book-service" data-toggle="modal" data-target="#<?php echo esc_attr($modal_id); ?>">
-                        <?php echo esc_html__('Reservar Ahora', 'clever-booking'); ?>
+                        <?php echo esc_html($booking_button_text); ?>
                     </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
     
+    <?php if ($show_booking_button) : ?>
     <!-- Modal -->
     <div id="<?php echo esc_attr($modal_id); ?>" class="cb-booking-modal">
         <div class="cb-booking-modal-content">
@@ -211,9 +245,11 @@ if ($layout === 'grid') {
                         </div>
                     </div>
                     
-                    <div class="cb-booking-form-group">
-                        <label for="cb-notes-<?php echo esc_attr($service_id); ?>"><?php echo esc_html__('Notas', 'clever-booking'); ?></label>
-                        <textarea id="cb-notes-<?php echo esc_attr($service_id); ?>" name="notes"></textarea>
+                    <div class="cb-booking-form-row">
+                        <div class="cb-booking-form-group">
+                            <label for="cb-notes-<?php echo esc_attr($service_id); ?>"><?php echo esc_html__('Notas', 'clever-booking'); ?></label>
+                            <textarea id="cb-notes-<?php echo esc_attr($service_id); ?>" name="notes"></textarea>
+                        </div>
                     </div>
                     
                     <div class="cb-booking-form-alerts"></div>
@@ -235,9 +271,38 @@ if ($layout === 'grid') {
             </div>
         </div>
     </div>
+    <?php endif; ?>
     
     <?php endforeach; ?>
 </div>
+
+<?php if ($show_pagination): ?>
+<div class="cb-pagination">
+    <?php
+    global $wp_query;
+    
+    // Guardar la consulta original
+    $temp_query = $wp_query;
+    
+    // Crear una consulta temporal para la paginación
+    $temp = $wp_query;
+    $wp_query = new WP_Query([
+        'post_type' => 'cb_service',
+        'posts_per_page' => $items_per_page,
+        'paged' => $paged
+    ]);
+    
+    // Mostrar la paginación
+    echo paginate_links([
+        'prev_text' => '&laquo; ' . __('Anterior', 'clever-booking'),
+        'next_text' => __('Siguiente', 'clever-booking') . ' &raquo;',
+    ]);
+    
+    // Restaurar la consulta original
+    $wp_query = $temp_query;
+    ?>
+</div>
+<?php endif; ?>
 
 <script>
 jQuery(document).ready(function($) {

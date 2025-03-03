@@ -192,11 +192,7 @@ class Clever_Booking_Public {
     }
 
     /**
-     * Shortcode para mostrar la lista de servicios.
-     * 
-     * [clever_booking_services]
-     * [clever_booking_services category="muebles"]
-     * [clever_booking_services columns="3"]
+     * Callback para el shortcode de la lista de servicios.
      *
      * @since    1.0.0
      * @param    array    $atts    Atributos del shortcode.
@@ -204,36 +200,28 @@ class Clever_Booking_Public {
      */
     public function services_list_shortcode($atts) {
         $atts = shortcode_atts(array(
-            'category' => '',
+            'category_id' => 0,
+            'layout' => 'grid',
             'columns' => 3,
+            'items_per_page' => 9,
+            'show_image' => 'yes',
+            'show_title' => 'yes',
+            'show_meta' => 'yes',
+            'show_price' => 'yes',
+            'show_details_button' => 'yes',
+            'details_button_text' => __('Ver Detalles', 'clever-booking'),
+            'show_booking_button' => 'yes',
+            'booking_button_text' => __('Reservar Ahora', 'clever-booking'),
+            'show_pagination' => 'yes',
         ), $atts, 'clever_booking_services');
-        
-        // Convertir columnas a un número
-        $columns = absint($atts['columns']);
-        if ($columns < 1 || $columns > 4) {
-            $columns = 3;
-        }
-        
-        // Preparar argumentos para la consulta
-        $args = array(
-            'limit' => -1, // Sin límite
-        );
-        
-        // Filtrar por categoría si se especificó
-        if (!empty($atts['category'])) {
-            $args['category'] = sanitize_title($atts['category']);
-        }
-        
-        // Obtener los servicios
-        $services = $this->booking_logic->get_available_services($args);
         
         // Iniciar el buffer de salida
         ob_start();
         
-        // Incluir la vista de la lista de servicios
-        include CLEVER_BOOKING_PLUGIN_DIR . 'public/views/services-list.php';
+        // Incluir la vista de los servicios
+        include plugin_dir_path(__FILE__) . 'views/services-list.php';
         
-        // Devolver el contenido del buffer y limpiarlo
+        // Obtener el contenido del buffer y limpiarlo
         return ob_get_clean();
     }
 
